@@ -20,6 +20,10 @@ app.get('/api-docs-check', (req, res) => {
     res.send('Swagger activo');
   });
 
+  app.get('/prueba-api-docs', (req, res) => {
+    res.send('¿Swagger está montado?');
+  });
+
 // Inicializar la base de datos y luego arrancar el servidor
 mongodb.initDb((err) => {
   if (err) {
