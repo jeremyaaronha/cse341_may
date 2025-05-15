@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // Rutas
+app.use('/', require('./routes'))
 app.use('/contacts', require('./routes/contacts'));
 
 // Documentación Swagger
