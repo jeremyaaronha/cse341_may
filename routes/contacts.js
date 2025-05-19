@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
-
 const contactsController = require('../controllers/contacts');
+
+/**
+ * @swagger
+ * tags:
+ *   name: Contacts
+ *   description: API for managing contacts
+ */
 
 /**
  * @swagger
  * /contacts:
  *   get:
+ *     tags:
+ *       - Contacts
  *     summary: Obtener todos los contactos
  *     description: Retorna una lista de todos los contactos almacenados en la base de datos.
  *     responses:
@@ -19,6 +27,8 @@ router.get('/', contactsController.getAll);
  * @swagger
  * /contacts/{id}:
  *   get:
+ *     tags:
+ *       - Contacts
  *     summary: Obtener un contacto por ID
  *     description: Retorna un contacto específico usando su ID.
  *     parameters:
@@ -40,6 +50,8 @@ router.get('/:id', contactsController.getSingle);
  * @swagger
  * /contacts:
  *   post:
+ *     tags:
+ *       - Contacts
  *     summary: Crear un nuevo contacto
  *     description: Crea un nuevo contacto con los datos enviados en el cuerpo de la solicitud.
  *     requestBody:
@@ -62,12 +74,17 @@ router.get('/:id', contactsController.getSingle);
  *     responses:
  *       201:
  *         description: Contacto creado exitosamente
+ *       500:
+ *         description: Error del servidor
  */
+router.post('/', contactsController.createContact);
 
 /**
  * @swagger
  * /contacts/{id}:
  *   put:
+ *     tags:
+ *       - Contacts
  *     summary: Actualizar un contacto por ID
  *     description: Actualiza los datos de un contacto existente mediante su ID.
  *     parameters:
@@ -99,6 +116,8 @@ router.get('/:id', contactsController.getSingle);
  *         description: Contacto actualizado exitosamente
  *       404:
  *         description: Contacto no encontrado
+ *       500:
+ *         description: Error del servidor
  */
 router.put('/:id', contactsController.updateContact);
 
@@ -106,6 +125,8 @@ router.put('/:id', contactsController.updateContact);
  * @swagger
  * /contacts/{id}:
  *   delete:
+ *     tags:
+ *       - Contacts
  *     summary: Eliminar un contacto por ID
  *     description: Elimina un contacto existente mediante su ID.
  *     parameters:
@@ -120,6 +141,8 @@ router.put('/:id', contactsController.updateContact);
  *         description: Contacto eliminado exitosamente
  *       404:
  *         description: Contacto no encontrado
+ *       500:
+ *         description: Error del servidor
  */
 router.delete('/:id', contactsController.deleteContact);
 

@@ -1,23 +1,16 @@
-const path = require('path');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const swaggerAutogen = require('swagger-autogen')();
 
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Contacts API',
-      version: '1.0.0',
-      description: 'Documentación de la API de contactos'
-    }
+const doc = {
+  info: {
+    title: 'Contacts API',
+    description: 'API documentation for Contacts',
   },
-//  apis: [path.join(__dirname, './routes/*.js')], // Ruta absoluta para evitar errores
-apis: [path.join(__dirname, './routes/*.js')]
+  host: 'localhost:3000',
+  basePath: '/contacts',
+  schemes: ['http'],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const outputFile = './swagger-output.json';
+const endpointsFiles = ['./routes/contacts.js']; 
 
-module.exports = {
-  swaggerUi,
-  swaggerSpec
-};
+swaggerAutogen(outputFile, endpointsFiles, doc);

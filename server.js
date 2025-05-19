@@ -2,7 +2,8 @@ const express = require('express');
 const { initDb } = require('./data/database');
 const mongodb = require('./data/database');
 
-const { swaggerUi, swaggerSpec } = require('./swagger');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,8 +16,7 @@ app.use('/', require('./routes'))
 app.use('/contacts', require('./routes/contacts'));
 
 // Documentación Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/api-docs-check', (req, res) => {
     res.send('Swagger activo');
   });
