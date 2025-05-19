@@ -7,7 +7,7 @@ const doc = {
   },
   host: 'project1-fq53.onrender.com',
   basePath: '/contacts',
-  schemes: ['http'],
+  schemes: ['https'],
 };
 
 const outputFile = './swagger-output.json';
