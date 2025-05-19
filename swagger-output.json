@@ -5,7 +5,7 @@
     "description": "API documentation for Contacts",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "project1-fq53.onrender.com",
   "basePath": "/contacts",
   "schemes": [
     "http"
@@ -125,8 +125,8 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           },
           "404": {
             "description": "Not Found"
@@ -147,8 +147,8 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           },
           "404": {
             "description": "Not Found"
