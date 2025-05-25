@@ -5,7 +5,7 @@ Content-Type: application/json
 ###
 
 ### GET contact by ID
-GET http://localhost:3000/contacts/67cc9bfe4d9bc9cf4671debf
+GET http://localhost:3000/contacts/67cc9c114d9bc9cf4671dec0
 Content-Type: application/json
 
 ###
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "firstName": "John",
-  "lastName": "Doe",
+  "lastName": "Doe", 
   "email": "johndoe@example.com",
   "favoriteColor": "Blue",
   "birthday": "1990-01-01"
@@ -25,19 +25,19 @@ Content-Type: application/json
 ###
 
 ### PUT update a contact
-PUT http://localhost:3000/contacts/67cc9bfe4d9bc9cf4671debf
+PUT http://localhost:3000/contacts/67cc9c114d9bc9cf4671dec0
 Content-Type: application/json
 
 {
   "firstName": "Jane",
-  "lastName": "Doe",
-  "email": "janedoe@example.com",
-  "favoriteColor": "Green",
-  "birthday": "1992-02-02"
+  "lastName": "Smith",
+  "email": "jane.smith@example.com",
+  "favoriteColor": "Red",
+  "birthday": "1985-05-05"
 }
 
 ###
 
 ### DELETE contact
-DELETE http://localhost:3000/contacts/67cc9bfe4d9bc9cf4671debf
+DELETE http://localhost:3000/contacts/67cc9c114d9bc9cf4671dec0
 Content-Type: application/json

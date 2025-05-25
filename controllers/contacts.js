@@ -1,88 +1,84 @@
-const mongodb = require('../data/database');
-const ObjectId = require('mongodb').ObjectId;
+const Contact = require('../models/contacts');
+const mongoose = require('mongoose');
 
 const getAll = async (req, res) => {
   try {
-    const result = await mongodb.getDatabase().collection('Contacts').find();
-    result.toArray().then((contacts) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(contacts);
-    });
+    const contacts = await Contact.find();
+    res.status(200).json(contacts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error: ' + err.message });
   }
 };
 
 const getSingle = async (req, res) => {
+  const contactId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
   try {
-    const contactId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().collection('Contacts').find({ _id: contactId });
-    result.toArray().then((contacts) => {
-      if (contacts.length > 0) {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(contacts[0]);
-      } else {
-        res.status(404).json({ message: 'Contact not found' });
-      }
-    });
+    const contact = await Contact.findById(contactId);
+    if (!contact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    res.status(200).json(contact);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error: ' + err.message });
   }
 };
 
 const createContact = async (req, res) => {
   try {
-    const contact = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      favoriteColor: req.body.favoriteColor,
-      birthday: req.body.birthday
-    };
-
-    const result = await mongodb.getDatabase().collection('Contacts').insertOne(contact);
-    res.status(201).json({ id: result.insertedId });
+    const contact = new Contact(req.body);
+    const savedContact = await contact.save();
+    res.status(201).json({ id: savedContact._id, message: 'Contact created successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: 'Failed to create contact', details: err.message });
   }
 };
 
 const updateContact = async (req, res) => {
+  const contactId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
   try {
-    const contactId = new ObjectId(req.params.id);
-    const contact = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      favoriteColor: req.body.favoriteColor,
-      birthday: req.body.birthday
-    };
+    const updatedContact = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+      runValidators: true
+    });
 
-    const result = await mongodb.getDatabase().collection('Contacts').replaceOne({ _id: contactId }, contact);
-
-    if (result.modifiedCount > 0) {
-      res.status(200).json({ message: 'Contacto actualizado exitosamente' });
-    } else {
-      res.status(404).json({ message: 'Contact not found or no changes made' });
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
     }
+
+    res.status(200).json({ message: 'Contact updated successfully', contact: updatedContact });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: 'Failed to update contact', details: err.message });
   }
 };
 
 const deleteContact = async (req, res) => {
-  try {
-    const contactId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().collection('Contacts').deleteOne({ _id: contactId });
+  const contactId = req.params.id;
 
-    if (result.deletedCount > 0) {
-      res.status(200).json({ message: 'Contacto eliminado exitosamente' });
-      
-    } else {
-      res.status(404).json({ message: 'Contact not found' });
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+    const deletedContact = await Contact.findByIdAndDelete(contactId);
+
+    if (!deletedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
     }
+
+    res.status(200).json({ message: 'Contact deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error: ' + err.message });
   }
 };
 

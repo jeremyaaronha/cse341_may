@@ -1,25 +1,56 @@
 const express = require('express');
 const router = express.Router();
 const contactsController = require('../controllers/contacts');
+const { saveContact } = require('../helpers/validateContact');
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Contact:
+ *       type: object
+ *       required:
+ *         - firstName
+ *         - lastName
+ *         - email
+ *         - favoriteColor
+ *         - birthday
+ *       properties:
+ *         firstName:
+ *           type: string
+ *           example: John
+ *         lastName:
+ *           type: string
+ *           example: Doe
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: johndoe@example.com
+ *         favoriteColor:
+ *           type: string
+ *           example: Blue
+ *         birthday:
+ *           type: string
+ *           format: date
+ *           example: 1990-01-01
+ */
 
 /**
  * @swagger
  * tags:
- *   name: Contacts
- *   description: API for managing contacts
+ *   - name: Contacts
+ *     description: API for managing contacts
  */
 
 /**
  * @swagger
  * /contacts:
  *   get:
- *     tags:
- *       - Contacts
- *     summary: Obtener todos los contactos
- *     description: Retorna una lista de todos los contactos almacenados en la base de datos.
+ *     tags: [Contacts]
+ *     summary: Retrieve all contacts
  *     responses:
  *       200:
- *         description: Lista de contactos obtenida exitosamente
+ *         description: List of contacts
  */
 router.get('/', contactsController.getAll);
 
@@ -27,22 +58,20 @@ router.get('/', contactsController.getAll);
  * @swagger
  * /contacts/{id}:
  *   get:
- *     tags:
- *       - Contacts
- *     summary: Obtener un contacto por ID
- *     description: Retorna un contacto específico usando su ID.
+ *     tags: [Contacts]
+ *     summary: Get a contact by ID
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: ID del contacto
  *         schema:
  *           type: string
+ *         required: true
+ *         description: Contact ID
  *     responses:
  *       200:
- *         description: Contacto encontrado exitosamente
+ *         description: Contact found
  *       404:
- *         description: Contacto no encontrado
+ *         description: Contact not found
  */
 router.get('/:id', contactsController.getSingle);
 
@@ -50,99 +79,69 @@ router.get('/:id', contactsController.getSingle);
  * @swagger
  * /contacts:
  *   post:
- *     tags:
- *       - Contacts
- *     summary: Crear un nuevo contacto
- *     description: Crea un nuevo contacto con los datos enviados en el cuerpo de la solicitud.
+ *     tags: [Contacts]
+ *     summary: Create a new contact
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               email:
- *                 type: string
- *               favoriteColor:
- *                 type: string
- *               birthday:
- *                 type: string
+ *             $ref: '#/components/schemas/Contact'
  *     responses:
  *       201:
- *         description: Contacto creado exitosamente
- *       500:
- *         description: Error del servidor
+ *         description: Contact created
+ *       400:
+ *         description: Validation error
  */
-router.post('/', contactsController.createContact);
+router.post('/', saveContact, contactsController.createContact);
 
 /**
  * @swagger
  * /contacts/{id}:
  *   put:
- *     tags:
- *       - Contacts
- *     summary: Actualizar un contacto por ID
- *     description: Actualiza los datos de un contacto existente mediante su ID.
+ *     tags: [Contacts]
+ *     summary: Update a contact
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: ID del contacto a actualizar
  *         schema:
  *           type: string
+ *         required: true
+ *         description: Contact ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               email:
- *                 type: string
- *               favoriteColor:
- *                 type: string
- *               birthday:
- *                 type: string
+ *             $ref: '#/components/schemas/Contact'
  *     responses:
  *       200:
- *         description: Contacto actualizado exitosamente
+ *         description: Contact updated
+ *       400:
+ *         description: Validation error
  *       404:
- *         description: Contacto no encontrado
- *       500:
- *         description: Error del servidor
+ *         description: Contact not found
  */
-router.put('/:id', contactsController.updateContact);
+router.put('/:id', saveContact, contactsController.updateContact);
 
 /**
  * @swagger
  * /contacts/{id}:
  *   delete:
- *     tags:
- *       - Contacts
- *     summary: Eliminar un contacto por ID
- *     description: Elimina un contacto existente mediante su ID.
+ *     tags: [Contacts]
+ *     summary: Delete a contact
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: ID del contacto a eliminar
  *         schema:
  *           type: string
+ *         required: true
+ *         description: Contact ID
  *     responses:
  *       200:
- *         description: Contacto eliminado exitosamente
+ *         description: Contact deleted
  *       404:
- *         description: Contacto no encontrado
- *       500:
- *         description: Error del servidor
+ *         description: Contact not found
  */
 router.delete('/:id', contactsController.deleteContact);
 
